@@ -52,7 +52,7 @@ class ProductionVisionEngine:
   "engineer": "Chandu Challa",
   "location": "Hyderabad, Telangana, India",
   "timezone": "UTC+05:30 (IST)",
-  "phone": "+91 9059169996",
+  "phone": "+91 90591 •••••• (Direct WhatsApp on site)",
   "email": "challachandu5c3@gmail.com",
   "github": "https://github.com/67chandu",
   "linkedin": "https://linkedin.com/in/chandu-challa",

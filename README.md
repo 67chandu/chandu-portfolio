@@ -67,5 +67,5 @@ npm run build
 * **Portfolio**: [https://chandu-portfolio-phi.vercel.app](https://chandu-portfolio-phi.vercel.app)
 * **GitHub**: [@67chandu](https://github.com/67chandu)
 * **Email**: challachandu5c3@gmail.com / challachandu67@gmail.com
-* **Phone / WhatsApp**: +91 9059169996
+* **WhatsApp**: Direct 1-Click WhatsApp Quick-Connect on [Live Portfolio](https://chandu-portfolio-phi.vercel.app)
 * **Location**: Hyderabad, Telangana, India

@@ -465,7 +465,7 @@ export const initialPortfolioData: PortfolioState = {
     showContactSection: true,
     showTroubleshootingSection: true,
   },
-  adminPin: '2025',
+  adminPin: import.meta.env.VITE_ADMIN_PIN || '2025',
 }
 
 // Aliases for compatibility

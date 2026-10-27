@@ -162,7 +162,7 @@ export function AdminPortal() {
           <div>
             <h1 className="font-heading text-xl font-bold text-white">Owner Studio Lock</h1>
             <p className="text-xs text-slate-400 mt-1">
-              Enter your private PIN (default: <code className="text-cyan-300">2025</code>)
+              Enter your private owner PIN to manage portfolio data
             </p>
           </div>
 
@@ -174,11 +174,11 @@ export function AdminPortal() {
                 setPinInput(e.target.value)
                 setPinError(false)
               }}
-              placeholder="PIN..."
+              placeholder="Owner PIN..."
               autoFocus
               className="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 text-sm text-white font-mono tracking-widest"
             />
-            {pinError && <p className="text-xs text-rose-400">Incorrect PIN (try 2025 or 2026).</p>}
+            {pinError && <p className="text-xs text-rose-400">Incorrect PIN. Access denied.</p>}
             <button
               type="submit"
               className="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs transition cursor-pointer"
