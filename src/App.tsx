@@ -7,7 +7,6 @@ import { SmoothScroll } from './components/layout/SmoothScroll'
 import { ScrollProgressBar } from './components/layout/ScrollProgressBar'
 import { Navbar } from './components/layout/Navbar'
 import { FloatingWhatsApp } from './components/common/FloatingWhatsApp'
-import { FloatingDock } from './components/layout/FloatingDock'
 import { TechMarquee } from './components/layout/TechMarquee'
 import { HeroSection } from './components/sections/HeroSection'
 import { AboutSection } from './components/sections/AboutSection'
@@ -34,9 +33,8 @@ function PortfolioContent() {
         <ThreeBackground />
         <Navbar />
         <FloatingWhatsApp />
-        <FloatingDock />
 
-        <main className="relative z-10">
+        <main className="relative z-10 overflow-x-hidden">
           <HeroSection />
           <TechMarquee />
           <AboutSection />

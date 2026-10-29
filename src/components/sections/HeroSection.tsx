@@ -120,6 +120,7 @@ export function HeroSection() {
           loop
           muted
           playsInline
+          preload="metadata"
           onLoadedData={() => setVideoLoaded(true)}
           className="w-full h-full object-cover object-[75%_center] sm:object-[75%_center] md:object-[75%_center] lg:object-[75%_center] xl:object-[75%_center]"
           style={{
@@ -182,24 +183,13 @@ export function HeroSection() {
             animate="visible"
             className="lg:col-span-7 xl:col-span-7 w-full max-w-2xl lg:max-w-3xl space-y-6 text-left relative z-10"
           >
-            {/* 21st.dev & ThreeUI Live System Telemetry & Brand Row */}
-            <motion.div variants={fadeUpVariant} className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-emerald-500/30 text-[11px] font-mono text-emerald-300 shadow-[0_0_14px_rgba(16,185,129,0.18)] backdrop-blur-md">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <span className="tracking-wider uppercase font-semibold">AVAILABLE FOR HIRE</span>
-                <span className="text-slate-600">•</span>
-                <span className="text-slate-400">2025 GRADUATE</span>
-              </div>
-
-              <span className="hidden sm:inline-block w-6 h-[1px] bg-slate-700/60" />
-
-              <span className="font-mono text-xs uppercase tracking-[0.28em] text-slate-300/80 font-medium flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+            {/* Clean Brand Tag */}
+            <motion.div variants={fadeUpVariant} className="flex items-center gap-2">
+              <span className="font-mono text-xs uppercase tracking-[0.28em] text-slate-300/80 font-medium flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 CHANDU CHALLA<span className="text-amber-400">.</span>
               </span>
+              <span className="hidden sm:inline-block w-8 h-[1px] bg-slate-600/50" />
             </motion.div>
 
             {/* GSAP & Tasteskill.dev Kinetic Typography Headline */}

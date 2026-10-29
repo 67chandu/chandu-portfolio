@@ -1,17 +1,8 @@
 import { motion } from 'motion/react'
-import {
-  Sparkles,
-  ArrowUpRight,
-  GraduationCap,
-  Cpu,
-  Terminal,
-  CheckCircle2,
-} from 'lucide-react'
+import { Sparkles, ArrowUpRight } from 'lucide-react'
 import { usePortfolio } from '../../context'
 import { GoldFramedPortrait3D } from '../common/GoldFramedPortrait3D'
 import { staggerContainerVariant, fadeUpVariant } from '../../utils/animations'
-import { BentoCard } from '../ui/BentoGrid'
-import { InteractiveTerminal } from '../ui/InteractiveTerminal'
 
 export function AboutSection() {
   const { data } = usePortfolio()
@@ -157,79 +148,6 @@ export function AboutSection() {
               name={profileData.name}
             />
           </motion.div>
-        </div>
-
-        {/* =========================================================================
-            21st.dev & ThreeUI Engineering Bento Grid
-            Interactive Developer Terminal + Academic Radar + Production Systems
-            ========================================================================= */}
-        <div className="pt-10 border-t border-amber-500/15 space-y-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-amber-500/30 text-amber-300 font-mono text-xs uppercase tracking-wider">
-              <Terminal className="w-3.5 h-3.5 text-amber-400" />
-              <span>Developer Telemetry &amp; System Architecture</span>
-            </div>
-            <span className="text-xs font-mono text-slate-500">
-              Interactive Terminal // Click tabs to inspect live code
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* Left 7 Cols: Interactive Terminal */}
-            <div className="lg:col-span-7 h-full flex flex-col justify-center">
-              <InteractiveTerminal />
-            </div>
-
-            {/* Right 5 Cols: 2 Bento Cards */}
-            <div className="lg:col-span-5 flex flex-col gap-5 justify-between">
-              {/* Card 1: Academic Credentials */}
-              <BentoCard
-                badge="ACADEMIC FOUNDATION"
-                icon={<GraduationCap className="w-5 h-5" />}
-                title="B.Tech in CSE (AI & ML)"
-                description="Graduated in 2025 from Malla Reddy University with a 7.65 CGPA, specializing in computer vision, neural network architectures, and distributed systems."
-                href="#education"
-                cta="View Academic Credentials"
-                hasBorderBeam={true}
-                glowColor="gold"
-              >
-                <div className="pt-2 flex items-center justify-between text-xs font-mono bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-                  <span className="text-slate-400">CGPA: 7.65 / 10</span>
-                  <span className="text-amber-300 font-semibold">CLASS OF 2025</span>
-                </div>
-              </BentoCard>
-
-              {/* Card 2: 4 Core AI/ML Systems */}
-              <BentoCard
-                badge="PRODUCTION PIPELINES"
-                icon={<Cpu className="w-5 h-5" />}
-                title="4 Production Systems"
-                description="Architected and deployed end-to-end prototypes spanning single-stage detection, transformer attention classification, and acoustic feature extraction."
-                href="#projects"
-                cta="Explore 4 Core Projects"
-                glowColor="cyan"
-              >
-                <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[10px]">
-                  <div className="flex items-center gap-1.5 text-slate-300 bg-slate-950/60 px-2 py-1.5 rounded-lg border border-slate-800">
-                    <CheckCircle2 className="w-3 h-3 text-cyan-400" />
-                    <span>YOLOv8 Vision</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-slate-300 bg-slate-950/60 px-2 py-1.5 rounded-lg border border-slate-800">
-                    <CheckCircle2 className="w-3 h-3 text-cyan-400" />
-                    <span>Toxic Span NLP</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-slate-300 bg-slate-950/60 px-2 py-1.5 rounded-lg border border-slate-800">
-                    <CheckCircle2 className="w-3 h-3 text-cyan-400" />
-                    <span>Audio MFCC ML</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-slate-300 bg-slate-950/60 px-2 py-1.5 rounded-lg border border-slate-800">
-                    <CheckCircle2 className="w-3 h-3 text-cyan-400" />
-                    <span>AI Chat Memory</span>
-                  </div>
-                </div>
-              </BentoCard>
-            </div>
-          </div>
         </div>
       </div>
     </section>

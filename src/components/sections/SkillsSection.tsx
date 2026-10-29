@@ -9,9 +9,7 @@ import {
   Layers,
   Cpu,
   Search,
-  CheckCircle2,
   ArrowUpRight,
-  Activity,
   X,
 } from 'lucide-react'
 import { usePortfolio } from '../../context'
@@ -325,74 +323,6 @@ function InteractiveSkillCard({
 }
 
 /**
- * Animated Neural Category Radar Deck
- * Displays real-time audio/quantum frequency oscillations that change according to active category
- */
-function CategoryWaveformTelemetry({
-  activeCategory,
-  activeCount,
-}: {
-  activeCategory: CategoryTab
-  activeCount: number
-}) {
-  const theme = CATEGORY_THEMES[activeCategory] || CATEGORY_THEMES['Programming Languages']
-
-  return (
-    <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs select-none">
-      {/* Category Info */}
-      <div className="flex items-center gap-3">
-        <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center border shadow-sm"
-          style={{
-            backgroundColor: `${theme.accent}15`,
-            borderColor: `${theme.accent}40`,
-            color: theme.accent,
-          }}
-        >
-          <Activity className="w-4 h-4 animate-pulse" />
-        </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400 text-[10px] uppercase font-mono">DOMAIN STACK</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-          </div>
-          <span className="text-white font-bold text-xs tracking-wider font-mono">
-            {activeCategory.toUpperCase()} • {activeCount} {activeCount === 1 ? 'SKILL' : 'SKILLS'}
-          </span>
-        </div>
-      </div>
-
-      {/* Dynamic Dancing Multi-Band Frequency Bars */}
-      <div className="flex items-center gap-1.5 h-6">
-        {[0.8, 0.4, 0.9, 0.6, 1.0, 0.5, 0.85, 0.7, 0.95, 0.45, 0.75, 0.6].map((amp, idx) => (
-          <motion.span
-            key={`${activeCategory}-${idx}`}
-            animate={{
-              height: ['20%', `${Math.round(amp * 100)}%`, '30%'],
-            }}
-            transition={{
-              duration: 0.8 + (idx % 3) * 0.2,
-              repeat: Infinity,
-              repeatType: 'reverse',
-              ease: 'easeInOut',
-              delay: idx * 0.05,
-            }}
-            className="w-1 rounded-full shadow-sm"
-            style={{ backgroundColor: theme.accent }}
-          />
-        ))}
-      </div>
-
-      {/* Verification Seal */}
-      <div className="flex items-center gap-1.5 text-slate-400 text-[11px] font-mono">
-        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-        <span>PROJECT VERIFIED</span>
-      </div>
-    </div>
-  )
-}
-
-/**
  * Master SkillsSection
  * Completely overhauled with deep cinematic animations:
  * 1. Animated Category Waveform Deck with dynamic frequency bars
@@ -530,12 +460,6 @@ export function SkillsSection() {
                 </button>
               )}
             </div>
-
-            {/* Neural Category Waveform Deck */}
-            <CategoryWaveformTelemetry
-              activeCategory={activeCategory}
-              activeCount={filteredSkills.length}
-            />
           </div>
 
           {/* Skills Grid */}
