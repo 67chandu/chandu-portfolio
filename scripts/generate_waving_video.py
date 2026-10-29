@@ -1,67 +1,70 @@
 import os
 import math
+import subprocess
 import numpy as np
 from PIL import Image, ImageFilter, ImageDraw
 import imageio_ffmpeg
-import subprocess
 
-def generate_waving_video():
-    print("Loading source images...")
-    wave_img = Image.open('public/chandu-waving.jpg').convert('RGBA').resize((1024, 576), Image.Resampling.LANCZOS)
-    base_img = Image.open('public/chandu-3d-portrait.jpg').convert('RGBA').resize((1024, 576), Image.Resampling.LANCZOS)
+def smooth_step(edge0, edge1, x):
+    t = max(0.0, min(1.0, (x - edge0) / (edge1 - edge0)))
+    return t * t * (3.0 - 2.0 * t)
 
+def cubic_ease_in_out(t):
+    if t < 0.5:
+        return 4.0 * t * t * t
+    else:
+        p = 2.0 * t - 2.0
+        return 0.5 * p * p * p + 1.0
+
+def generate_avatar_waving_video():
+    print("Loading high-res character assets...")
     w, h = 1024, 576
     fps = 60
-    duration = 2.5
-    total_frames = int(fps * duration) # 150 frames
+    duration = 3.0
+    total_frames = int(fps * duration)  # 180 frames
 
-    # Extract Hand Sprite & Mask
-    # Hand is in x in [130, 330], y in [180, 520]
-    hand_arr = np.array(wave_img)
-    mask_arr = np.zeros((h, w), dtype=np.uint8)
-    
-    # Hand skin / clothing threshold
-    hand_crop = hand_arr[180:520, 130:330]
-    brightness = hand_crop[:, :, :3].mean(axis=-1)
-    hand_mask = (brightness > 35).astype(np.uint8) * 255
-    mask_arr[180:520, 130:330] = hand_mask
+    base = Image.open('public/chandu-3d-portrait.jpg').resize((w, h), Image.Resampling.LANCZOS).convert('RGBA')
+    wave = Image.open('public/chandu-waving.jpg').resize((w, h), Image.Resampling.LANCZOS).convert('RGBA')
+    arr = np.array(wave)
 
-    # Feather the hand mask smoothly
-    hand_mask_im = Image.fromarray(mask_arr).filter(ImageFilter.GaussianBlur(radius=3.5))
+    # 1. Clean Hand + Peach Cuff Sprite Mask
+    mask = np.zeros((h, w), dtype=bool)
+    r = arr[:, :340, 0].astype(int)
+    g = arr[:, :340, 1].astype(int)
+    b = arr[:, :340, 2].astype(int)
 
-    # Hand sprite on transparent canvas
+    skin = (r > 60) & (r > g) & (g > b * 0.9) & (b > 20)
+    peach = (r > 90) & (g > 50) & (b > 40)
+    hand_zone = (skin | peach)
+
+    # Cleanly exclude collar peak on the right for y > 430
+    hand_zone[430:, 245:] = False
+    mask[:515, :340] = hand_zone[:515, :]
+
+    hand_mask_img = Image.fromarray((mask * 255).astype(np.uint8))
+    hand_mask_img = hand_mask_img.filter(ImageFilter.MaxFilter(size=3)).filter(ImageFilter.GaussianBlur(radius=1.5))
+
     hand_sprite = Image.new('RGBA', (w, h), (0, 0, 0, 0))
-    hand_sprite.paste(wave_img, (0, 0), hand_mask_im)
+    hand_sprite.paste(wave, (0, 0), hand_mask_img)
 
-    # Base background: base_img with wave_img blended for the chest/body
-    bg_mask = Image.new('L', (w, h), 0)
-    bg_draw = ImageDraw.Draw(bg_mask)
-    # Exclude the waving hand area from wave_img when creating the static body/background
-    bg_draw.rectangle([(330, 0), (w, h)], fill=255)
-    bg_draw.rectangle([(0, 520), (w, h)], fill=255)
-    bg_mask = bg_mask.filter(ImageFilter.GaussianBlur(radius=10))
+    # Hand crop box & wrist pivot inside the sleeve opening
+    hand_bbox = (110, 40, 330, 515)
+    cropped_hand = hand_sprite.crop(hand_bbox)
+    pivot_x = 190 - hand_bbox[0]
+    pivot_y = 505 - hand_bbox[1]
 
-    composite_bg = base_img.copy()
-    composite_bg.paste(wave_img, (0, 0), bg_mask)
+    # 2. Sleeve Sprite Mask (Navy suit jacket opening from y=495 to 576)
+    sleeve_mask = np.zeros((h, w), dtype=bool)
+    sleeve_mask[495:576, :340] = (arr[495:576, :340].mean(axis=-1) > 18)
+    sleeve_mask_im = Image.fromarray((sleeve_mask * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(radius=2.0))
+    sleeve_sprite = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    sleeve_sprite.paste(wave, (0, 0), sleeve_mask_im)
 
-    # Wrist pivot point in 1024x576 coordinates
-    pivot_x = 228
-    pivot_y = 485
-
-    # Crop hand sprite tightly around pivot to allow fast rotation
-    crop_box = (120, 160, 340, 520)
-    cropped_hand = hand_sprite.crop(crop_box)
-    local_pivot_x = pivot_x - crop_box[0]
-    local_pivot_y = pivot_y - crop_box[1]
-
-    # Pre-generate floating golden sparkles
-    np.random.seed(42)
-    num_sparkles = 24
-    sparkle_x = np.random.uniform(80, 950, num_sparkles)
-    sparkle_y = np.random.uniform(50, 520, num_sparkles)
-    sparkle_speed = np.random.uniform(18, 42, num_sparkles)
-    sparkle_sizes = np.random.uniform(1.8, 3.8, num_sparkles)
-    sparkle_phases = np.random.uniform(0, math.pi * 2, num_sparkles)
+    # 3. Facial Expression Blend Mask (Warm open smile from waving photo)
+    face_mask = Image.new('L', (w, h), 0)
+    draw = ImageDraw.Draw(face_mask)
+    draw.ellipse([(440, 260), (660, 430)], fill=255)
+    face_mask = face_mask.filter(ImageFilter.GaussianBlur(radius=14.0))
 
     mp4_path = 'public/chandu-waving.mp4'
     print(f"Generating {total_frames} frames ({fps} FPS, {duration}s) to {mp4_path}...")
@@ -72,57 +75,75 @@ def generate_waving_video():
         fps=fps,
         codec='libx264',
         pix_fmt_in='rgb24',
-        output_params=['-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', '-movflags', '+faststart']
+        output_params=['-pix_fmt', 'yuv420p', '-crf', '17', '-preset', 'medium', '-movflags', '+faststart']
     )
     writer.send(None)
 
     for frame_idx in range(total_frames):
-        t_norm = frame_idx / total_frames
-        t_sec = frame_idx / fps
+        t = frame_idx / fps  # 0.0 to 3.0s
 
-        # 1. Hand Waving Physics: 3 full harmonic wave oscillations in 2.5s
-        wave_cycles = 3.0
-        wave_theta = 15.5 * math.sin(2 * math.pi * wave_cycles * t_norm) + 2.5 * math.sin(4 * math.pi * wave_cycles * t_norm)
-        wave_dx = 11.0 * math.sin(2 * math.pi * wave_cycles * t_norm)
-        wave_dy = -3.5 * abs(math.sin(2 * math.pi * wave_cycles * t_norm))
+        # Reference video kinematics:
+        # 0.0 - 0.4s: Idle resting
+        # 0.4 - 0.85s: Hand raises & mouth smiles
+        # 0.85 - 2.15s: Active waving (2 full oscillation cycles)
+        # 2.15 - 2.6s: Hand lowers & mouth returns to rest
+        # 2.6 - 3.0s: Settles into resting pose
+        if t < 0.4:
+            elev = 0.0
+            smile_blend = 0.0
+            wave_angle = 0.0
+        elif t < 0.85:
+            prog = (t - 0.4) / 0.45
+            elev = cubic_ease_in_out(prog)
+            smile_blend = smooth_step(0.0, 1.0, prog)
+            wave_angle = 0.0
+        elif t < 2.15:
+            elev = 1.0
+            smile_blend = 1.0
+            wave_t = t - 0.85  # 0.0 to 1.3s
+            # 2 natural waves in 1.3 seconds (~1.54 Hz)
+            wave_phase = wave_t * (2.0 * math.pi * 1.54)
+            wave_angle = 11.5 * math.sin(wave_phase) + 1.5 * math.sin(wave_phase * 2)
+        elif t < 2.6:
+            prog = (t - 2.15) / 0.45
+            elev = 1.0 - cubic_ease_in_out(prog)
+            smile_blend = 1.0 - smooth_step(0.0, 1.0, prog)
+            wave_angle = 0.0
+        else:
+            elev = 0.0
+            smile_blend = 0.0
+            wave_angle = 0.0
 
-        # 2. Torso & Head Natural Respiration (2 gentle breaths per loop)
-        body_dy = 2.2 * math.sin(2 * math.pi * 2.0 * t_norm)
-        head_tilt = 0.8 * math.sin(2 * math.pi * 2.0 * t_norm)
+        # Subtle natural respiration
+        breath_y = 1.5 * math.sin(2.0 * math.pi * 0.7 * t)
+        torso_sway = 1.8 * math.sin(wave_phase) if (0.85 <= t < 2.15) else 0.0
 
-        # 3. Create frame canvas
-        frame = composite_bg.copy()
+        # Base frame assembly
+        frame = base.copy()
 
-        # 4. Rotate and position hand sprite around local wrist pivot
-        # To rotate around local_pivot, we expand canvas or rotate with center
-        # Pillow rotate supports center parameter!
-        rot_hand = cropped_hand.rotate(
-            -wave_theta, # negative for natural coordinate angle
-            resample=Image.Resampling.BICUBIC,
-            center=(local_pivot_x, local_pivot_y)
-        )
+        # Blend facial smile
+        if smile_blend > 0.005:
+            scaled_mask = face_mask.point(lambda p: int(p * smile_blend))
+            frame.paste(wave, (0, 0), scaled_mask)
 
-        # Paste rotated hand back at target position
-        paste_x = int(crop_box[0] + wave_dx)
-        paste_y = int(crop_box[1] + wave_dy + body_dy * 0.5)
-        frame.paste(rot_hand, (paste_x, paste_y), rot_hand)
+        # Elevate hand and sleeve from below frame
+        if elev > 0.001:
+            dy = (1.0 - elev) * 360.0
+            cur_y = int(dy + breath_y * 0.3)
+            cur_x = int(torso_sway * 0.4)
 
-        # 5. Render floating 3D golden dust bokeh sparkles
-        draw = ImageDraw.Draw(frame)
-        for s in range(num_sparkles):
-            sy = (sparkle_y[s] - sparkle_speed[s] * t_sec) % (h - 40) + 20
-            sx = sparkle_x[s] + 6.0 * math.sin(sparkle_phases[s] + t_sec * 2.0)
-            alpha_pulse = 0.45 + 0.35 * math.sin(sparkle_phases[s] + t_norm * math.pi * 4)
-            size = sparkle_sizes[s]
+            # Rotate hand around wrist pivot
+            rot = cropped_hand.rotate(
+                -wave_angle,
+                resample=Image.Resampling.BICUBIC,
+                center=(pivot_x, pivot_y)
+            )
+            # Paste hand
+            frame.paste(rot, (hand_bbox[0] + cur_x, hand_bbox[1] + cur_y), rot)
 
-            # Soft golden sparkle dot
-            r, g, b = int(253 * alpha_pulse), int(224 * alpha_pulse), int(71 * alpha_pulse)
-            draw.ellipse([sx - size, sy - size, sx + size, sy + size], fill=(255, 240, 160, int(255 * alpha_pulse)))
-            # Outer halo
-            halo_size = size * 2.2
-            draw.ellipse([sx - halo_size, sy - halo_size, sx + halo_size, sy + halo_size], outline=(245, 158, 11, int(120 * alpha_pulse)))
+            # Paste sleeve over opening for perfect seamless occlusion
+            frame.paste(sleeve_sprite, (cur_x, cur_y), sleeve_sprite)
 
-        # Convert to RGB bytes
         frame_rgb = frame.convert('RGB')
         writer.send(frame_rgb.tobytes())
 
@@ -132,10 +153,10 @@ def generate_waving_video():
     writer.close()
     print("MP4 generation complete!")
 
-    # Also convert to WebM for ultra-efficient modern browser playback
+    # Transcode WebM VP9 version
     ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
     webm_path = 'public/chandu-waving.webm'
-    print(f"Generating WebM ({webm_path})...")
+    print(f"Generating WebM VP9 ({webm_path})...")
     subprocess.run([
         ffmpeg_exe, '-y', '-i', mp4_path,
         '-c:v', 'libvpx-vp9', '-crf', '26', '-b:v', '0',
@@ -144,4 +165,4 @@ def generate_waving_video():
     print("WebM generation complete!")
 
 if __name__ == '__main__':
-    generate_waving_video()
+    generate_avatar_waving_video()
