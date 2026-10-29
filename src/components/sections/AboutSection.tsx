@@ -145,6 +145,8 @@ export function AboutSection() {
           >
             <GoldFramedPortrait3D
               imageSrc="/chandu-3d-portrait.jpg"
+              videoSrcMp4="/chandu-waving.mp4"
+              videoSrcWebm="/chandu-waving.webm"
               name={profileData.name}
             />
           </motion.div>
