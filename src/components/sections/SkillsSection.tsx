@@ -390,7 +390,7 @@ export function SkillsSection() {
             <h2 className="font-heading text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
               Skills, Tooling &amp; <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-sky-400">
-                Applied AI Architecture
+                Applied AI &amp; Machine Learning
               </span>
             </h2>
 

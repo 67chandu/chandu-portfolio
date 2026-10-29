@@ -17,11 +17,8 @@ Designed with inspiration from **21st.dev**, **threeui.com**, **tasteskill.dev**
 * **Cinematic Studio Hero Stage**: Seamless cyclorama video integration with directional overhead spotlight and liquid gold typography.
 * **GSAP-Powered Magnetic Attraction**: Fluid cursor physics pulling buttons, pills, brand logos, and WhatsApp quick-connect towards the pointer.
 * **21st.dev Orbiting Border Beam & Bento Grid**: Luminous perimeter lasers and dynamic cursor-following spotlight cards.
-* **ThreeUI & Tasteskill.dev Interactive Terminal**: Multi-tab live telemetry cockpit (`telemetry.sh`, `yolo_pipeline.py`, `contact.json`) with one-click clipboard copying.
-* **Interactive 3D Three.js Visualizations**:
-  * Real-time 3D ambient particle wave field across the background.
-  * Interactive 3D Holographic Earth Globe with Hyderabad geo-beacon and orbital laser arcs.
-* **Full Mobile & Touch Optimization**: Native spring damping, responsive drawer navigation, and fluid 60 FPS touch tracking.
+* **Interactive 3D Three.js Ambient Visuals**: Real-time 3D ambient particle wave field running at 120 FPS with near-zero CPU footprint.
+* **Full Mobile & Touch Optimization**: Native hardware-accelerated scrolling, responsive drawer navigation, and fluid 60 FPS touch tracking.
 
 ---
 

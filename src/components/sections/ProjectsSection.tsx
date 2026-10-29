@@ -154,7 +154,7 @@ function YoloInteractivePreview() {
         </div>
       </motion.div>
 
-      {/* Bottom Telemetry Bar with Intrusion Simulation Trigger */}
+      {/* Bottom Status Bar with Intrusion Simulation Trigger */}
       <div className="flex items-center justify-between text-[9px] text-slate-400 pt-1.5 border-t border-slate-900 z-20">
         <span className="text-cyan-400">LATENCY: 12.4ms</span>
         <button
@@ -222,7 +222,7 @@ function NlpInteractivePreview() {
 
   return (
     <div className="relative w-full h-52 rounded-2xl bg-[#060a14] border border-indigo-500/35 overflow-hidden p-3.5 flex flex-col justify-between font-mono select-none shadow-lg shadow-indigo-950/30">
-      {/* Top Header & Neural Telemetry */}
+      {/* Top Header & Neural Status */}
       <div className="flex items-center justify-between text-[10px] z-10">
         <div className="flex items-center gap-1.5 text-indigo-300 font-semibold">
           <Activity className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
@@ -271,7 +271,7 @@ function NlpInteractivePreview() {
         </div>
       </div>
 
-      {/* Dynamic Attention Vector Bar Matrix & Telemetry */}
+      {/* Dynamic Attention Vector Bar Matrix */}
       <div className="space-y-1.5 pt-1">
         <div className="flex items-center justify-between text-[9px] text-slate-400">
           <span className="flex items-center gap-1">
@@ -480,7 +480,7 @@ function AudioInteractivePreview() {
         </div>
       </div>
 
-      {/* DSP Telemetry Line */}
+      {/* DSP Frequency & Feature Line */}
       <div className="flex items-center justify-between text-[9px] text-slate-400 px-0.5">
         <span>SAMPLE: 22.05 kHz</span>
         <span className="text-sky-300">MFCC[0..19]: 20 CHANNELS</span>
@@ -772,7 +772,7 @@ export function ProjectsSection() {
             badgeNumber="03"
             badgeLabel="Featured AI/ML Projects"
             title="Interactive AI & Machine Learning Engineering"
-            subtitle="Every project card features an interactive live architecture simulation. Hover, click, and interact with the real-time previews or switch to Cinematic Showcase mode."
+            subtitle="Explore practical machine learning and full-stack systems with interactive live previews, codebase walk-throughs, and technical breakdowns."
             icon={<FolderGit2 className="w-3.5 h-3.5" />}
           />
 

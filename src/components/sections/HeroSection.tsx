@@ -214,7 +214,7 @@ export function HeroSection() {
             {/* Interactive Magnetic Role Badges (21st.dev tactile spring float) */}
             <motion.div variants={fadeUpVariant} className="flex flex-wrap items-center gap-2 pt-0.5">
               {(profileData?.heroBadges || [
-                'FULL STACK ARCHITECTURE',
+                'FULL STACK ENGINEERING',
                 'AI & COMPUTER VISION',
                 'DATA SCIENCE & ML',
               ]).map((title, idx) => {

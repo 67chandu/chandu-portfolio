@@ -57,7 +57,7 @@ export const initialPortfolioData: PortfolioState = {
     heroNarrative:
       'I build intelligent digital experiences and production-ready machine learning systems. Where modern full-stack software engineering meets computer vision, NLP, and applied AI.',
     heroBadges: [
-      'FULL STACK ARCHITECTURE',
+      'FULL STACK ENGINEERING',
       'AI & COMPUTER VISION',
       'DATA SCIENCE & ML',
     ],
