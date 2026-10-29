@@ -25,4 +25,6 @@ dist-ssr
 
 .vercel
 *.zip
+scripts/debug_crops
+scripts/demo_frames
 
